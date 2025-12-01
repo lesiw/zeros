@@ -25,7 +25,7 @@ go get lesiw.io/zeros
 
 ### Chan
 
-[▶️ Run this example on the Go Playground](https://go.dev/play/p/h452fJySTjN)
+[▶️ Run this example on the Go Playground](https://go.dev/play/p/PUEddCMEVAR)
 
 ```go
 package main
@@ -40,21 +40,26 @@ func main() {
     var ch zeros.Chan[int]
 
     go func() {
-        ch.C() <- 42 // auto-initializes the channel
+        ch.Send(42) // auto-initializes the channel
     }()
 
-    value := <-ch.C()
+    value := ch.Recv()
     fmt.Println(value)
 }
 ```
 
 Available methods:
-- `C() chan T` - Returns the underlying channel (follows `time.Ticker`/`time.Timer` pattern)
+- `Chan() chan T` - Returns the underlying channel
+- `Send(v T)` - Sends a value on the channel (blocks)
+- `Recv() T` - Receives a value from the channel (blocks)
+- `CheckRecv() (T, bool)` - Receives with channel status indicator
+- `TrySend(v T) bool` - Attempts to send without blocking
+- `TryRecv() (T, bool)` - Attempts to receive without blocking
 - `Close()` - Closes the underlying channel
 
 ### Map
 
-[▶️ Run this example on the Go Playground](https://go.dev/play/p/uHckFuMlsyP)
+[▶️ Run this example on the Go Playground](https://go.dev/play/p/JahXu_ZR9DR)
 
 ```go
 package main
@@ -70,8 +75,10 @@ func main() {
 
     m.Set("answer", 42) // auto-initializes the map
 
-    if v, ok := m.Get("answer"); ok {
-        fmt.Println(v)
+    fmt.Println(m.Get("answer"))
+
+    if _, ok := m.CheckGet("missing"); !ok {
+        fmt.Println("key not found")
     }
 
     for k, v := range m.All() {
@@ -81,11 +88,15 @@ func main() {
 ```
 
 Available methods:
+- `Map() map[K]V` - Returns the underlying map
 - `Set(key K, value V)` - Sets a key-value pair
-- `Get(key K) (V, bool)` - Retrieves a value by key
+- `Get(key K) V` - Returns value or zero value if missing
+- `CheckGet(key K) (V, bool)` - Returns value and presence indicator
 - `Delete(key K)` - Removes a key
 - `Len() int` - Returns the number of elements
-- `All() iter.Seq2[K, V]` - Returns an iterator for range-over-func
+- `Keys() iter.Seq[K]` - Returns an iterator over keys
+- `Values() iter.Seq[V]` - Returns an iterator over values
+- `All() iter.Seq2[K, V]` - Returns an iterator over key-value pairs
 - `Clear()` - Removes all elements
 
 ## Thread Safety
