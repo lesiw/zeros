@@ -2,23 +2,31 @@ name: Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ '*' ]
   pull_request:
     branches: [ main ]
 
 jobs:
   test:
+    name: ${{ matrix.race && '(race)' || '' }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        race: [true, false]
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: 'stable'
-
-    - name: Test
-      run: go test ./...
+        go-version: stable
 
     - name: Test with race detector
+      if: matrix.race
       run: go test -race ./...
+
+    - name: Test without race detector
+      if: '!matrix.race'
+      env:
+        CGO_ENABLED: 0
+      run: go test ./...
