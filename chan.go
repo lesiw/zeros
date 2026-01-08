@@ -1,53 +1,32 @@
 package zeros
 
-import "sync"
-
 // Chan is a zero-valueable channel wrapper that auto-initializes on first use.
-type Chan[T any] struct {
-	once sync.Once
-	ch   chan T
-}
+type Chan[T any] struct { once OnceValue[chan T] }
 
-func (c *Chan[T]) init() {
-	c.once.Do(func() {
-		c.ch = make(chan T)
-	})
-}
+func (c *Chan[T]) init() chan T { return make(chan T) }
 
 // Chan returns the underlying channel.
-func (c *Chan[T]) Chan() chan T {
-	c.init()
-	return c.ch
-}
+func (c *Chan[T]) Chan() chan T { return c.once.Do(c.init) }
 
 // Send sends a value on the channel, blocking until the value is sent.
-func (c *Chan[T]) Send(v T) {
-	c.init()
-	c.ch <- v
-}
+func (c *Chan[T]) Send(v T) { c.once.Do(c.init) <- v }
 
 // Recv receives a value from the channel, blocking until a value is available.
 // Returns the zero value if the channel is closed.
-func (c *Chan[T]) Recv() T {
-	c.init()
-	v := <-c.ch
-	return v
-}
+func (c *Chan[T]) Recv() T { return <-c.once.Do(c.init) }
 
 // CheckRecv receives a value from the channel with a status indicator.
 // The boolean return value indicates whether the channel is open.
 func (c *Chan[T]) CheckRecv() (T, bool) {
-	c.init()
-	v, ok := <-c.ch
+	v, ok := <-c.once.Do(c.init)
 	return v, ok
 }
 
 // TrySend attempts to send a value on the channel without blocking.
 // It reports whether the value was sent.
 func (c *Chan[T]) TrySend(v T) bool {
-	c.init()
 	select {
-	case c.ch <- v:
+	case c.once.Do(c.init) <- v:
 		return true
 	default:
 		return false
@@ -59,9 +38,8 @@ func (c *Chan[T]) TrySend(v T) bool {
 // If no value is available, it returns the zero value and false.
 // If the channel is closed, it returns the zero value and false.
 func (c *Chan[T]) TryRecv() (T, bool) {
-	c.init()
 	select {
-	case v, ok := <-c.ch:
+	case v, ok := <-c.once.Do(c.init):
 		return v, ok
 	default:
 		var zero T
@@ -70,7 +48,4 @@ func (c *Chan[T]) TryRecv() (T, bool) {
 }
 
 // Close closes the underlying channel.
-func (c *Chan[T]) Close() {
-	c.init()
-	close(c.ch)
-}
+func (c *Chan[T]) Close() { close(c.once.Do(c.init)) }

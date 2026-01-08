@@ -198,3 +198,26 @@ func ExampleMap_Clear() {
 	// 2
 	// 0
 }
+func ExampleOnceValue() {
+	type lazyReader struct {
+		init zeros.OnceValue[string]
+	}
+	var r lazyReader
+
+	data := r.init.Do(func() string {
+		fmt.Println("Loading data")
+		return "Hello, World!"
+	})
+	fmt.Println(data)
+
+	data = r.init.Do(func() string {
+		fmt.Println("This won't print")
+		return "Goodbye"
+	})
+	fmt.Println(data)
+
+	// Output:
+	// Loading data
+	// Hello, World!
+	// Hello, World!
+}
