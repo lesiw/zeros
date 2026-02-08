@@ -27,7 +27,7 @@ func (f *lazyFile) Write(p []byte) (int, error) {
 
 func (f *lazyFile) Close() error {
 	file, err := f.once.Do(f.init)
-	if err != nil { 
+	if err != nil {
 		return fmt.Errorf("failed to close file: %w", err)
 	}
 	defer os.Remove(file.Name())

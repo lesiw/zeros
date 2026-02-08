@@ -1,7 +1,7 @@
 package zeros
 
 // Chan is a zero-valueable channel wrapper that auto-initializes on first use.
-type Chan[T any] struct { once OnceValue[chan T] }
+type Chan[T any] struct{ once OnceValue[chan T] }
 
 func (c *Chan[T]) init() chan T { return make(chan T) }
 

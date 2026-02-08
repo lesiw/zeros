@@ -3,7 +3,7 @@ package zeros
 import "iter"
 
 // Map is a zero-valueable map wrapper that auto-initializes on first use.
-type Map[K comparable, V any] struct { once OnceValue[map[K]V] }
+type Map[K comparable, V any] struct{ once OnceValue[map[K]V] }
 
 func (m *Map[K, V]) init() map[K]V { return make(map[K]V) }
 
