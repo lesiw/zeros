@@ -14,8 +14,8 @@
 // Example usage:
 //
 //	var ch zeros.Chan[int]
-//	ch.C() <- 42  // auto-initializes the channel
-//	v := <-ch.C()
+//	ch.Send(42)  // auto-initializes the channel
+//	v := ch.Recv()
 //
 //	var m zeros.Map[string, int]
 //	m.Set("answer", 42)  // auto-initializes the map
