@@ -1,6 +1,11 @@
 # zeros
 
 [![Go Reference](https://pkg.go.dev/badge/lesiw.io/zeros.svg)](https://pkg.go.dev/lesiw.io/zeros)
+[![CI](https://github.com/lesiw/zeros/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/lesiw/zeros/actions/workflows/main.yml)
+[![Release](https://img.shields.io/github/v/tag/lesiw/zeros?sort=semver&label=release)](https://github.com/lesiw/zeros/tags)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/lesiw/zeros)](go.mod)
+[![Discord](https://img.shields.io/discord/1145827224516300971?logo=discord&logoColor=white&color=5865F2&label=discord)](https://lesiw.dev/discord)
+[![License](https://img.shields.io/github/license/lesiw/zeros)](../LICENSE)
 
 Zero-valueable wrappers for Go's built-in types and sync patterns.
 
