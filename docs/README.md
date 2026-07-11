@@ -14,6 +14,7 @@ Zero-valueable wrappers for Go's built-in types and sync patterns.
 Package `zeros` provides types that are usable at their zero value:
 
 - **`Chan[T]`** and **`Map[K,V]`** auto-initialize on first use, eliminating the need for explicit `make()` calls
+- **`Slice[T]`** is a slice type whose `Append` mutates in place and returns the updated slice, so package-level `var` initializers across files can build up a single value
 - **`OnceValue[T]`** and **`OnceValues[T1, T2]`** provide zero-valueable alternatives to `sync.OnceValue` and `sync.OnceValues`
 
 All types follow the same principle as `bytes.Buffer` and `sync.Mutex`: they work immediately without initialization.
@@ -108,6 +109,52 @@ Available methods:
 - `Values() iter.Seq[V]` - Returns an iterator over values
 - `All() iter.Seq2[K, V]` - Returns an iterator over key-value pairs
 - `Clear()` - Removes all elements
+
+### Slice
+
+A slice type whose `Append` mutates in place and returns the updated slice — usable from package-level `var` initializers across multiple files:
+
+[▶️ Run this example on the Go Playground](https://go.dev/play/p/H0A61FG29MY)
+
+```
+-- go.mod --
+module example
+
+go 1.23
+
+require lesiw.io/zeros v0.4.0
+-- registry.go --
+package main
+
+import "lesiw.io/zeros"
+
+var inits zeros.Slice[func()]
+-- a.go --
+package main
+
+import "fmt"
+
+var _ = inits.Append(func() { fmt.Println("setup A") })
+-- b.go --
+package main
+
+import "fmt"
+
+var _ = inits.Append(func() { fmt.Println("setup B") })
+-- main.go --
+package main
+
+func main() {
+	for _, fn := range inits {
+		fn()
+	}
+}
+```
+
+`Slice[T]` is defined as `[]T`, so index, `len`, `range`, and the standard `slices` package all work on it directly.
+
+Available methods:
+- `Append(v ...T) Slice[T]` - Appends values in place and returns the updated slice
 
 ### OnceValue
 
@@ -216,6 +263,8 @@ func main() {
 **`OnceValue` and `OnceValues`** are fully thread-safe. The wrapped function is guaranteed to execute exactly once, even with concurrent calls.
 
 **`Chan` and `Map`** have thread-safe initialization, but the types themselves are **not safe for concurrent access** without external synchronization (like Go's built-in `chan` and `map` types). If you need concurrent map access, use external locking or `sync.Map`.
+
+**`Slice`** is not safe for concurrent modification, matching Go's built-in slice type.
 
 ## Why?
 

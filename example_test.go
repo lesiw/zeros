@@ -198,6 +198,22 @@ func ExampleMap_Clear() {
 	// 2
 	// 0
 }
+
+func ExampleSlice() {
+	var s zeros.Slice[int]
+
+	s.Append(1)
+	s.Append(2, 3)
+
+	for _, v := range s {
+		fmt.Println(v)
+	}
+	// Output:
+	// 1
+	// 2
+	// 3
+}
+
 func ExampleOnceValue() {
 	type lazyReader struct {
 		init zeros.OnceValue[string]
