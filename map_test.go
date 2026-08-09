@@ -149,9 +149,9 @@ func TestMapKeys(t *testing.T) {
 	m.Set("b", 2)
 	m.Set("c", 3)
 
-	seen := make(map[string]bool)
+	seen := make(map[string]struct{})
 	for k := range m.Keys() {
-		seen[k] = true
+		seen[k] = struct{}{}
 	}
 
 	if len(seen) != 3 {
@@ -159,7 +159,7 @@ func TestMapKeys(t *testing.T) {
 	}
 	want := []string{"a", "b", "c"}
 	for _, k := range want {
-		if !seen[k] {
+		if _, ok := seen[k]; !ok {
 			t.Errorf("range m.Keys() did not see key %q", k)
 		}
 	}
@@ -172,9 +172,9 @@ func TestMapValues(t *testing.T) {
 	m.Set("b", 2)
 	m.Set("c", 3)
 
-	seen := make(map[int]bool)
+	seen := make(map[int]struct{})
 	for v := range m.Values() {
-		seen[v] = true
+		seen[v] = struct{}{}
 	}
 
 	if len(seen) != 3 {
@@ -182,7 +182,7 @@ func TestMapValues(t *testing.T) {
 	}
 	want := []int{1, 2, 3}
 	for _, v := range want {
-		if !seen[v] {
+		if _, ok := seen[v]; !ok {
 			t.Errorf("range m.Values() did not see value %d", v)
 		}
 	}

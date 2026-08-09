@@ -9,7 +9,7 @@ import (
 )
 
 type lazyFile struct {
-	once zeros.OnceValues[*os.File, error]
+	zeros.OnceValues[*os.File, error]
 }
 
 func (f *lazyFile) init() (*os.File, error) {
@@ -18,7 +18,7 @@ func (f *lazyFile) init() (*os.File, error) {
 }
 
 func (f *lazyFile) Write(p []byte) (int, error) {
-	file, err := f.once.Do(f.init)
+	file, err := f.Do(f.init)
 	if err != nil {
 		return 0, fmt.Errorf("failed to open file: %w", err)
 	}
@@ -26,7 +26,7 @@ func (f *lazyFile) Write(p []byte) (int, error) {
 }
 
 func (f *lazyFile) Close() error {
-	file, err := f.once.Do(f.init)
+	file, err := f.Do(f.init)
 	if err != nil {
 		return fmt.Errorf("failed to close file: %w", err)
 	}
@@ -35,7 +35,7 @@ func (f *lazyFile) Close() error {
 }
 
 func (f *lazyFile) Stat() (os.FileInfo, error) {
-	file, err := f.once.Do(f.init)
+	file, err := f.Do(f.init)
 	if err != nil {
 		return nil, fmt.Errorf("failed to stat file: %w", err)
 	}
