@@ -103,10 +103,7 @@ func TestMapAll(t *testing.T) {
 		if gotV, ok := seen[k]; !ok {
 			t.Errorf("range m.All() did not see key %q", k)
 		} else if gotV != wantV {
-			t.Errorf(
-				"range m.All() for key %q = %d, want %d",
-				k, gotV, wantV,
-			)
+			t.Errorf("range m.All() for key %q = %d, want %d", k, gotV, wantV)
 		}
 	}
 }
