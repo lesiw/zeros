@@ -109,9 +109,10 @@ func TestMapAll(t *testing.T) {
 }
 
 func TestMapAllEmpty(t *testing.T) {
-	var m Map[string, int]
-
-	var called bool
+	var (
+		m      Map[string, int]
+		called bool
+	)
 	for range m.All() {
 		called = true
 	}
@@ -188,9 +189,10 @@ func TestMapValues(t *testing.T) {
 }
 
 func TestMapValuesEmpty(t *testing.T) {
-	var m Map[string, int]
-
-	var called bool
+	var (
+		m      Map[string, int]
+		called bool
+	)
 	for range m.Values() {
 		called = true
 	}
@@ -201,9 +203,10 @@ func TestMapValuesEmpty(t *testing.T) {
 }
 
 func TestMapKeysEmpty(t *testing.T) {
-	var m Map[string, int]
-
-	var called bool
+	var (
+		m      Map[string, int]
+		called bool
+	)
 	for range m.Keys() {
 		called = true
 	}

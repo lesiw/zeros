@@ -30,11 +30,11 @@ func TestSliceAppendVariadic(t *testing.T) {
 }
 
 func TestSliceAppendReturnsUpdated(t *testing.T) {
-	var s Slice[int]
-
-	got := s.Append(1, 2)
-
-	want := []int{1, 2}
+	var (
+		s    Slice[int]
+		got  = s.Append(1, 2)
+		want = []int{1, 2}
+	)
 	if !slices.Equal(got, want) {
 		t.Errorf("s.Append(1, 2) = %v, want %v", got, want)
 	}
@@ -54,9 +54,10 @@ func TestSliceAppendMultiple(t *testing.T) {
 }
 
 func TestSliceRangeEmpty(t *testing.T) {
-	var s Slice[int]
-
-	var called bool
+	var (
+		s      Slice[int]
+		called bool
+	)
 	for range s {
 		called = true
 	}

@@ -69,8 +69,10 @@ func TestChanCheckRecv(t *testing.T) {
 
 func TestChanTrySend(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
-		var ch Chan[int]
-		var received int
+		var (
+			ch       Chan[int]
+			received int
+		)
 
 		// Start a receiver goroutine
 		go func() {
