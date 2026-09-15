@@ -237,3 +237,15 @@ func ExampleOnceValue() {
 	// Hello, World!
 	// Hello, World!
 }
+
+func ExampleIs() {
+	fmt.Printf("Is(%#v)=%t\n", 0, zeros.Is(0))
+	fmt.Printf("Is(%#v)=%t\n", 42, zeros.Is(42))
+	fmt.Printf("Is(%#v)=%t\n", "", zeros.Is(""))
+	fmt.Printf("Is(%#v)=%t\n", (*int)(nil), zeros.Is((*int)(nil)))
+	// Output:
+	// Is(0)=true
+	// Is(42)=false
+	// Is("")=true
+	// Is((*int)(nil))=true
+}

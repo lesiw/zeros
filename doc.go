@@ -1,5 +1,6 @@
 // Package zeros provides zero-valueable wrappers for channels, maps,
-// slices, and sync.OnceValues.
+// slices, and sync.OnceValues, plus an Is function that reports
+// whether a comparable value is its type's zero value.
 //
 // Chan and Map auto-initialize their underlying types on first use,
 // allowing them to be used without explicit initialization.
@@ -32,6 +33,10 @@
 //	var s zeros.Slice[int]
 //	var _ = s.Append(1)  // works across package-level initializers
 //	var _ = s.Append(2, 3)
+//
+//	if zeros.Is(0) {
+//		fmt.Println("zero value")
+//	}
 //
 //	type Config struct {
 //		value zeros.OnceValue[int]
